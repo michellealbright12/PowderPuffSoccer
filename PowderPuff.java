@@ -13,23 +13,41 @@ public class PowderPuff extends Player {
     static int distancesToBall[];
     static boolean someoneOnBall;
     static int playersOnBall[];
-    static final int attack = 1;
-    static final int leftForward = 2;
-    static final int rightForward = 3;
-    static final int defender = 4;
+    static final int ATTACK = 1;
+    static final int LEFTFORWARD = 2;
+    static final int RIGHTFORWARD = 3;
+    static final int DEFENDER = 4;
     static int positions[];
     
+    
+    public int MoveToClearPath() {
+        for (int i = 0; i <= 3; i++) {
+            if (positions[i] == ATTACK) {
+                
+            }
+        }
+        
+    }
+    
+    public int KickToClearPath() {
+        int move = PLAYER;
+    }
     
     //attack function
     public int Attack() {
         int move = PLAYER;
+        if (KickToClearPath() != PLAYER) {
+            return KickToClearPath();
+        }
         move = moveAroundBall();
         return move;
     }
     
     //leftForward function
     public int LeftForward() {
-        
+        int move = PLAYER;
+        move = FindClearPath();
+        return move;
     }
     
     //rightForward function
