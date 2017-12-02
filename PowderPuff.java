@@ -7,10 +7,10 @@ public class PowderPuff extends Player {
     static int distancesToBall[];
     static boolean someoneOnBall;
     static int playersOnBall[];
-    static final int attack = 1;
-    static final int leftForward = 2;
-    static final int rightForward = 3;
-    static final int defender = 4;
+    static final int ATTACK = 1;
+    static final int LEFTFORWARD = 2;
+    static final int RIGHTFORWARD = 3;
+    static final int DEFENDER = 4;
     static int positions[];
     
     
@@ -18,14 +18,73 @@ public class PowderPuff extends Player {
     
     //leftForward function
     
+    
+    
     //rightForward function
+    
+    
     
     //defender function
     
     //assignAttacker function
-    public void 
+    public void assignAttacker() {
+        int attacker = 0;
+        for (int i = 0; i < 4; i++) {
+            if (distancesToBall[i] < distancesToBall[attacker]) {
+                attacker = i;
+            }
+            if (playersOn[i] == 1) {
+                assignOthers(i);
+                break;
+            }
+        }
+        assignOthers(attacker);
+    }
     
     //assignOthers function
+    public void assignOthers(int attacker) {
+        int lowX = INTEGER.MAX_VALUE;
+        int highX = INTEGER.MIN_VALUE;
+        int lowY = INTEGER.MAX_VALUE;
+        int highY = INTEGER.MIN_VALUE;
+        
+        for (int i = 0; i < 4; i++) {
+            positions[i] == 0;
+        }
+        
+        positions[attacker] = ATTACK;
+        
+        //assigning leftForward
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                if (playersY[i] < lowY) {
+                    lowY = players[i];
+                    newLeftForward = i;
+                }
+            }
+        }
+        positions[newLeftForward] = LEFTFORWARD;
+        
+        //assigning rightForward
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                if (playersY[i] > highY) {
+                    highY = players[i];
+                    newRightForward = i;
+                }
+            }
+        }
+        positions[newRightForward] = RIGHTFORWARD;
+        
+        //assigning defender
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                positions[i] = DEFENDER;
+                break;
+            }
+        }
+        
+    }
     
     public void InitializeGame () {
         playersX = new int[4];
