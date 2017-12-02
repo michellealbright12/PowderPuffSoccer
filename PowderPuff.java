@@ -21,8 +21,16 @@ public class PowderPuff extends Player {
     
     
     //attack function
+    public int Attack() {
+        int move = PLAYER;
+        move = moveAroundBall();
+        return move;
+    }
     
     //leftForward function
+    public int LeftForward() {
+        
+    }
     
     //rightForward function
     
@@ -51,7 +59,7 @@ public class PowderPuff extends Player {
     public int AlternateMove(int move) {
         int originalMove = move;
         move = move + 1;
-        while (Look(move) == OPPONENT) {
+        while (Look(move) != EMPTY) {
             // try another move
             if (move < NORTHWEST) {
                 move++;
@@ -113,7 +121,7 @@ public class PowderPuff extends Player {
                 move = WEST;
         }
         /* If there is an opponent blocking the move you want to make */
-        if (Look(move) == OPPONENT) {
+        if (Look(move) != EMPTY) {
             move = AlternateMove(move);
         }
         return move;
