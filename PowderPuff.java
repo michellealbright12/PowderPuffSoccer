@@ -13,6 +13,24 @@ public class PowderPuff extends Player {
     static int distancesToBall[];
     static boolean someoneOnBall;
     static int playersOnBall[];
+    static final int attack = 1;
+    static final int leftForward = 2;
+    static final int rightForward = 3;
+    static final int defender = 4;
+    static int positions[];
+    
+    
+    //attack function
+    
+    //leftForward function
+    
+    //rightForward function
+    
+    //defender function
+    
+    //assignAttacker function
+    
+    //assignOthers function
     
     public void InitializeGame () {
         playersX = new int[4];
@@ -204,6 +222,13 @@ public class PowderPuff extends Player {
                 return Player4();
         }
         return BALL;
+    }
+    
+    /** Think about it. */
+    public final int GetTeammateDirection(int n)
+    {
+        return Parent.GetTeammateDirection(this, n);
+        //return NORTH;
     }
     
 }
