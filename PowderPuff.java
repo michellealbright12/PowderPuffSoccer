@@ -91,12 +91,78 @@ public class PowderPuff extends Player {
 
     //rightForward function
 
+
+    
+    
+    
+
     //defender function
 
     //assignAttacker function
 
     //assignOthers function
 
+
+    public void assignAttacker() {
+        int attacker = 0;
+        for (int i = 0; i < 4; i++) {
+            if (distancesToBall[i] < distancesToBall[attacker]) {
+                attacker = i;
+            }
+            if (playersOn[i] == 1) {
+                assignOthers(i);
+                break;
+            }
+        }
+        assignOthers(attacker);
+    }
+    
+    //assignOthers function
+    public void assignOthers(int attacker) {
+        int lowX = INTEGER.MAX_VALUE;
+        int highX = INTEGER.MIN_VALUE;
+        int lowY = INTEGER.MAX_VALUE;
+        int highY = INTEGER.MIN_VALUE;
+        
+        for (int i = 0; i < 4; i++) {
+            positions[i] == 0;
+        }
+        
+        positions[attacker] = ATTACK;
+        
+        //assigning leftForward
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                if (playersY[i] < lowY) {
+                    lowY = players[i];
+                    newLeftForward = i;
+                }
+            }
+        }
+        positions[newLeftForward] = LEFTFORWARD;
+        
+        //assigning rightForward
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                if (playersY[i] > highY) {
+                    highY = players[i];
+                    newRightForward = i;
+                }
+            }
+        }
+        positions[newRightForward] = RIGHTFORWARD;
+        
+        //assigning defender
+        for (int i = 0; i < 4; i++) {
+            if (positions[i] == 0) {
+                positions[i] = DEFENDER;
+                break;
+            }
+        }
+        
+    }
+    
+>>>>>>> origin/master
     public void InitializeGame () {
         playersX = new int[4];
         playersY = new int[4];
