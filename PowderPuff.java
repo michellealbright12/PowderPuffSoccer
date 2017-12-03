@@ -20,10 +20,43 @@ public class PowderPuff extends Player {
     static int positions[];
 
     public boolean isClearPath(int x1, int y1, int x2, int y2) {
-      boolean isClear = false;
+      int xDifference = abs(x1 - x2);
+      int yDifference = abs(y1 - y2);
+      int startX, endX;
+      int startY, endY;
 
-      //check all of the boxes between the two points
-      return isClear;
+      if (y1 < y2) {
+        // start from y1 move to y2
+        startY = y1;
+        endY = y2;
+      } else {
+        // start from y2 move to y1
+        startY = y2;
+        endY = y1;
+      }
+      if (x1 < x2) {
+        startX = x1;
+        endX = x2;
+      } else {
+        startX = x2;
+        endX = x1;
+      }
+
+      // check straight line in x direction
+      for (int i = startX; i < endX; i++) {
+          // if box (i, startY) is ! EMPTY, return false
+      }
+
+      // check straight line in y Direction
+      for (int j = startY; j < endY; j++) {
+
+      }
+
+      // check straight line in NE Direction
+
+      // check straight line in NW direction
+
+      return true;
     }
     public int MoveToClearPath(int position) {
       int attackX = 0;
@@ -92,9 +125,9 @@ public class PowderPuff extends Player {
     //rightForward function
 
 
-    
-    
-    
+
+
+
 
     //defender function
 
@@ -116,20 +149,20 @@ public class PowderPuff extends Player {
         }
         assignOthers(attacker);
     }
-    
+
     //assignOthers function
     public void assignOthers(int attacker) {
         int lowX = INTEGER.MAX_VALUE;
         int highX = INTEGER.MIN_VALUE;
         int lowY = INTEGER.MAX_VALUE;
         int highY = INTEGER.MIN_VALUE;
-        
+
         for (int i = 0; i < 4; i++) {
             positions[i] == 0;
         }
-        
+
         positions[attacker] = ATTACK;
-        
+
         //assigning leftForward
         for (int i = 0; i < 4; i++) {
             if (positions[i] == 0) {
@@ -140,7 +173,7 @@ public class PowderPuff extends Player {
             }
         }
         positions[newLeftForward] = LEFTFORWARD;
-        
+
         //assigning rightForward
         for (int i = 0; i < 4; i++) {
             if (positions[i] == 0) {
@@ -151,7 +184,7 @@ public class PowderPuff extends Player {
             }
         }
         positions[newRightForward] = RIGHTFORWARD;
-        
+
         //assigning defender
         for (int i = 0; i < 4; i++) {
             if (positions[i] == 0) {
@@ -159,10 +192,8 @@ public class PowderPuff extends Player {
                 break;
             }
         }
-        
     }
-    
->>>>>>> origin/master
+
     public void InitializeGame () {
         playersX = new int[4];
         playersY = new int[4];
