@@ -19,6 +19,8 @@ public class PowderPuff extends Player {
     static final int DEFENDER = 4;
     static int positions[];
 
+    /* Check to see if there is a "clear" path by checking the direction around
+       each player */
     public boolean isClearPath(int x1, int y1, int x2, int y2) {
       int xDifference = abs(x1 - x2);
       int yDifference = abs(y1 - y2);
@@ -26,20 +28,26 @@ public class PowderPuff extends Player {
       int startY, endY;
 
       if (y1 < y2) {
-        // start from y1 move to y2
+        // check to the right of y1
+        // and the left of y2
         startY = y1;
         endY = y2;
       } else {
-        // start from y2 move to y1
+        // check to the right of x2
+        // and the left of x1
         startY = y2;
         endY = y1;
       }
       if (x1 < x2) {
         startX = x1;
         endX = x2;
+        // check to the right of x1
+        // and the left of x2
       } else {
         startX = x2;
         endX = x1;
+        // check to the right of x2
+        // and the left of x1
       }
 
       // check straight line in x direction
@@ -103,6 +111,23 @@ public class PowderPuff extends Player {
 
     public int KickToClearPath() {
         int move = PLAYER;
+        int attackX, attackY;
+        int forwardX, forwardY;
+        for (int i = 0; i <= 3; i++) {
+          if (positions[i] == ATTACK) {
+            attackX = playersX[i];
+            attackY = playersY[i];
+          }
+          if (positions[i] == LEFTFORWARD || positions[i] == RIGHTFORWARD) {
+            forwardX = playersX[i];
+            forwardY = playersY[i];
+          }
+        }
+        if (isClearPath(attackX, attackY, forwardX, forwardY)) {
+          //move around ball to kick in the correct direction
+          move = MoveAroundBall();
+        }
+        return move;
     }
 
     //attack function
@@ -111,24 +136,32 @@ public class PowderPuff extends Player {
         if (KickToClearPath() != PLAYER) {
             return KickToClearPath();
         }
-        move = moveAroundBall();
+        move = MoveAroundBall();
         return move;
     }
 
     //leftForward function
     public int LeftForward() {
         int move = PLAYER;
-        move = FindClearPath();
+        //find attack index
+        int attack = 0;
+        //find leftforward index
+        int leftForward = 0;
+
+        if (!isClearPath(playersX[attack], playersY[attack],
+            playersX[leftForward], playersY[leftForward])) {
+
+        }
+        move = MoveToClearPath();
         return move;
     }
 
     //rightForward function
-
-
-
-
-
-
+    public int rightForward() {
+      int move = PLAYER;
+      move = MoveToClearPath();
+      return move;
+    }
     //defender function
 
     //assignAttacker function
@@ -213,7 +246,7 @@ public class PowderPuff extends Player {
     public int AlternateMove(int move) {
         int originalMove = move;
         move = move + 1;
-        while (Look(move) != EMPTY) {
+        while (Look(move) != EMPTY || Look(move) == BOUNDARY) {
             // try another move
             if (move < NORTHWEST) {
                 move++;
@@ -242,13 +275,7 @@ public class PowderPuff extends Player {
         return closestPlayer;
     }
 
-    public int GetLongestUnobstructedPass(int passer) {
-        int receiver = 0;
-
-        return receiver;
-    }
-
-    public int moveAroundBall() {
+    public int MoveAroundBall() {
         int move = PLAYER;
         int direction = PLAYER;
         for (int i = 0; i <= 7; i++) {
@@ -258,24 +285,24 @@ public class PowderPuff extends Player {
         }
         switch (direction) {
             case NORTH:
-                move = WEST;
+                move = EAST;
             case NORTHEAST:
                 move = NORTH;
             case EAST:
-                move = KICK;
-            case SOUTHEAST:
-                move = SOUTH;
-            case SOUTH:
-                move = WEST;
-            case SOUTHWEST:
-                move = WEST;
-            case WEST:
                 move = NORTH;
+            case SOUTHEAST:
+                move = EAST;
+            case SOUTH:
+                move = EAST;
+            case SOUTHWEST:
+                move = SOUTH;
+            case WEST:
+                move = KICK;
             case NORTHWEST:
-                move = WEST;
+                move = EAST;
         }
         /* If there is an opponent blocking the move you want to make */
-        if (Look(move) != EMPTY) {
+        if (Look(move) != EMPTY || Look(move) == BOUNDARY) {
             move = AlternateMove(move);
         }
         return move;
@@ -292,7 +319,7 @@ public class PowderPuff extends Player {
 
         if (closestPlayer == 0) {
             if (playersOnBall[0] == 1) {
-                return moveAroundBall();
+                return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
@@ -313,7 +340,7 @@ public class PowderPuff extends Player {
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 1) {
             if (playersOnBall[1] == 1) {
-                return moveAroundBall();
+                return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
@@ -334,7 +361,7 @@ public class PowderPuff extends Player {
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 2) {
             if (playersOnBall[2] == 1) {
-                return moveAroundBall();
+                return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
@@ -355,7 +382,7 @@ public class PowderPuff extends Player {
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 3) {
             if (playersOnBall[3] == 1) {
-                return moveAroundBall();
+                return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
