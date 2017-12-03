@@ -16,7 +16,7 @@ public class Player
     }
 
     /**  This function may be overloaded by your classes to allow you to draw custom players.
-    Use gc as your graphics constant and draw only in the rectangle provided.  The 
+    Use gc as your graphics constant and draw only in the rectangle provided.  The
     rectangle has the upper X,Y coordinates and the width and height of the area which
     the player should draw to.  */
 
@@ -25,7 +25,7 @@ public class Player
         if(Parent.GetTeamID(this)==World.EAST)
             gc.setColor(Color.blue);
         else
-            gc.setColor(Color.red);  
+            gc.setColor(Color.red);
         gc.fillRect(ClipRect.x, ClipRect.y, ClipRect.width, ClipRect.height);
         gc.setColor(Color.black);
         gc.drawRect(ClipRect.x, ClipRect.y, ClipRect.width-1, ClipRect.height-1);
@@ -187,6 +187,3 @@ public class Player
     static public final int TEAMMATE = 15;
     static public final int EMPTY = 16;
 }
-
-
-

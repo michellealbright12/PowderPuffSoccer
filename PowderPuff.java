@@ -1,13 +1,13 @@
 import java.awt.*;
 
 public class PowderPuff extends Player {
-    
-    public PowderPuff()
-    {
+
+    public PowderPuff() {
         super();
         CalledSuper = true;
         Run = true;
     }
+
     static int playersX[];
     static int playersY[];
     static int distancesToBall[];
@@ -18,21 +18,60 @@ public class PowderPuff extends Player {
     static final int RIGHTFORWARD = 3;
     static final int DEFENDER = 4;
     static int positions[];
-    
-    
-    public int MoveToClearPath() {
-        for (int i = 0; i <= 3; i++) {
-            if (positions[i] == ATTACK) {
-                
-            }
-        }
-        
+
+    public boolean isClearPath(int x1, int y1, int x2, int y2) {
+      boolean isClear = false;
+
+      //check all of the boxes between the two points
+      return isClear;
     }
-    
+    public int MoveToClearPath(int position) {
+      int attackX = 0;
+      int attackY = 0;
+      int secondX = 0;
+      int secondY = 0;
+      for (int i = 0; i <= 3; i++) {
+          if (positions[i] == ATTACK) {
+              attackX = playersX[i];
+              attackY = playersY[i];
+          } else if (positions[i] == LEFTFORWARD && positions[i] == position) {
+              secondX = playersX[i];
+              secondY = playersY[i];
+          } else if (positions[i] == RIGHTFORWARD && positions[i] == position) {
+              secondX = playersX[i];
+              secondY = playersY[i];
+          } else if (positions[i] == DEFENDER && positions[i] == position) {
+              secondX = playersX[i];
+              secondY = playersY[i];
+          }
+      }
+      if (isClearPath(attackX, attackY, secondX, secondY)) {
+        return KICK;
+      } else if isClearPath(attackX, attackY, secondX + 1, secondY)) {
+        return EAST;
+      } else if isClearPath(attackX, attackY, secondX - 1, secondY)) {
+        return WEST;
+      } else if isClearPath(attackX, attackY, secondX, secondY - 1)) {
+        return NORTH;
+      } else if isClearPath(attackX, attackY, secondX, secondY + 1)) {
+        return SOUTH;
+      } else if isClearPath(attackX, attackY, secondX + 1, secondY + 1)) {
+        return SOUTHEAST;
+      } else if isClearPath(attackX, attackY, secondX - 1, secondY + 1)) {
+        return SOUTHWEST;
+      } else if isClearPath(attackX, attackY, secondX + 1, secondY - 1)) {
+        return NORTHEAST;
+      } else if isClearPath(attackX, attackY, secondX - 1, secondY - 1)) {
+        return NORTHWEST;
+      } else {
+        return GetTeammateDirection();
+      }
+    }
+
     public int KickToClearPath() {
         int move = PLAYER;
     }
-    
+
     //attack function
     public int Attack() {
         int move = PLAYER;
@@ -42,22 +81,22 @@ public class PowderPuff extends Player {
         move = moveAroundBall();
         return move;
     }
-    
+
     //leftForward function
     public int LeftForward() {
         int move = PLAYER;
         move = FindClearPath();
         return move;
     }
-    
+
     //rightForward function
-    
+
     //defender function
-    
+
     //assignAttacker function
-    
+
     //assignOthers function
-    
+
     public void InitializeGame () {
         playersX = new int[4];
         playersY = new int[4];
@@ -65,7 +104,7 @@ public class PowderPuff extends Player {
         someoneOnBall = false;
         playersOnBall = new int[4];
     }
-    
+
     public void InitializePoint() {
         for (int i = 0; i <= 3; i++) {
             playersX[i] = 0;
@@ -73,7 +112,7 @@ public class PowderPuff extends Player {
             playersOnBall[i] = 0;
         }
     }
-    
+
     public int AlternateMove(int move) {
         int originalMove = move;
         move = move + 1;
@@ -105,13 +144,13 @@ public class PowderPuff extends Player {
         }
         return closestPlayer;
     }
-    
+
     public int GetLongestUnobstructedPass(int passer) {
         int receiver = 0;
-        
+
         return receiver;
     }
-    
+
     public int moveAroundBall() {
         int move = PLAYER;
         int direction = PLAYER;
@@ -144,16 +183,16 @@ public class PowderPuff extends Player {
         }
         return move;
     }
-    
+
     public int Player1() {
         int action = PLAYER;
-        
+
         playersX[0] = GetLocation().x;
         playersY[0] = GetLocation().y;
-        
+
         distancesToBall[0] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
-        
+
         if (closestPlayer == 0) {
             if (playersOnBall[0] == 1) {
                 return moveAroundBall();
@@ -166,13 +205,13 @@ public class PowderPuff extends Player {
         }
         return action;
     }
-    
+
     public int Player2() {
         int action = PLAYER;
-        
+
         playersX[1] = GetLocation().x;
         playersY[1] = GetLocation().y;
-        
+
         distancesToBall[1] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 1) {
@@ -187,13 +226,13 @@ public class PowderPuff extends Player {
         }
         return action;
     }
-    
+
     public int Player3() {
         int action = PLAYER;
-        
+
         playersX[2] = GetLocation().x;
         playersY[2] = GetLocation().y;
-        
+
         distancesToBall[2] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 2) {
@@ -208,13 +247,13 @@ public class PowderPuff extends Player {
         }
         return action;
     }
-    
+
     public int Player4() {
         int action = PLAYER;
-        
+
         playersX[3] = GetLocation().x;
         playersY[3] = GetLocation().y;
-        
+
         distancesToBall[3] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         if (closestPlayer == 3) {
@@ -229,12 +268,12 @@ public class PowderPuff extends Player {
         }
         return action;
     }
-    
+
     public void WonPoint () {};
     public void LostPoint () {};
     public void GameOver () {};
-    
-    
+
+
     public int getAction() {
         switch(ID)
         {
@@ -249,12 +288,12 @@ public class PowderPuff extends Player {
         }
         return BALL;
     }
-    
+
     /** Think about it. */
     public final int GetTeammateDirection(int n)
     {
         return Parent.GetTeammateDirection(this, n);
         //return NORTH;
     }
-    
+
 }
