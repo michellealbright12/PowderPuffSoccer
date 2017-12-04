@@ -1,3 +1,14 @@
+/*
+- Fix isClearPath function to determine which direction to look in and check to
+  see if that is clear : CLAIRE
+- Check to make sure move around ball works correctly : MICHELLE
+- Assign players to positions : MICHELLE
+- Get other people to move : CLAIRE
+- Finish leftForward and rightForward functions : CLAIRE
+- Defender function : MICHELLE
+*/
+
+
 import java.awt.*;
 
 public class PowderPuff extends Player {
@@ -266,7 +277,7 @@ public class PowderPuff extends Player {
             if (distancesToBall[i] < minDistance) {
                 minDistance = distancesToBall[i];
                 closestPlayer = i;
-                if (distancesToBall[i] == 0) {
+                if (distancesToBall[i] <= 1) {
                     someoneOnBall = true;
                     playersOnBall[i] = 1;
                 }
@@ -417,7 +428,6 @@ public class PowderPuff extends Player {
     public final int GetTeammateDirection(int n)
     {
         return Parent.GetTeammateDirection(this, n);
-        //return NORTH;
     }
 
 }
