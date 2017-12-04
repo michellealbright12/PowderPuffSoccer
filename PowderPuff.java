@@ -141,7 +141,7 @@ public class PowderPuff extends Player {
     }
 
     //leftForward function
-    public int LeftForward() {
+    public int leftForward() {
         int move = PLAYER;
         //find attack index
         int attack = 0;
@@ -162,11 +162,23 @@ public class PowderPuff extends Player {
       move = MoveToClearPath();
       return move;
     }
+    
     //defender function
-
-    //assignAttacker function
-
-    //assignOthers function
+    public int defender() {
+        //try to get between the ball and the endline
+        if (Look(NORTH) == BALL) {
+            /* If an opponent can kick toward my goal, try to kick the ball
+             away */
+            if (Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
+                return KICK;
+            }
+            
+            /* If ball is near my defending goal, really try to kick it */
+            if ((x > 3 * FieldX() / 4) &&
+                (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT)) {
+                return KICK;
+            }
+    }
 
 
     public void assignAttacker() {
@@ -266,7 +278,7 @@ public class PowderPuff extends Player {
             if (distancesToBall[i] < minDistance) {
                 minDistance = distancesToBall[i];
                 closestPlayer = i;
-                if (distancesToBall[i] == 0) {
+                if (distancesToBall[i] <= 1) {
                     someoneOnBall = true;
                     playersOnBall[i] = 1;
                 }
@@ -316,17 +328,27 @@ public class PowderPuff extends Player {
 
         distancesToBall[0] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
-
-        if (closestPlayer == 0) {
-            if (playersOnBall[0] == 1) {
+        assignAttacker();
+        switch (positions[0]) {
+            case ATTACK: action =  Attacker();
+                break;
+            case LEFTFORWARD: action =  leftForward();
+                break;
+            case RIGHTFORWARD: action =  rightForward();
+                break;
+            case DEFENDER: action =  rightForward();
+                break;
+        }
+            /*if (playersOnBall[0] == 1) {
+                assignAttacker();
                 return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
             } else {
                 return GetBallDirection();
-            }
-        }
+            }*/
+        
         return action;
     }
 
@@ -338,16 +360,26 @@ public class PowderPuff extends Player {
 
         distancesToBall[1] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
-        if (closestPlayer == 1) {
-            if (playersOnBall[1] == 1) {
+        switch (positions[1]) {
+            case ATTACK: action =  Attacker();
+                break;
+            case LEFTFORWARD: action =  leftForward();
+                break;
+            case RIGHTFORWARD: action =  rightForward();
+                break;
+            case DEFENDER: action =  rightForward();
+                break;
+        }
+            /*if (playersOnBall[1] == 1) {
+                assignAttacker();
                 return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
             } else {
                 return GetBallDirection();
-            }
-        }
+            }*/
+        
         return action;
     }
 
@@ -359,16 +391,26 @@ public class PowderPuff extends Player {
 
         distancesToBall[2] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
-        if (closestPlayer == 2) {
-            if (playersOnBall[2] == 1) {
+        switch (positions[2]) {
+            case ATTACK: action =  Attacker();
+                break;
+            case LEFTFORWARD: action =  leftForward();
+                break;
+            case RIGHTFORWARD: action =  rightForward();
+                break;
+            case DEFENDER: action =  rightForward();
+                break;
+        }
+            /*if (playersOnBall[2] == 1) {
+                assignAttacker();
                 return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
             } else {
                 return GetBallDirection();
-            }
-        }
+            }*/
+        
         return action;
     }
 
@@ -380,16 +422,26 @@ public class PowderPuff extends Player {
 
         distancesToBall[3] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
-        if (closestPlayer == 3) {
-            if (playersOnBall[3] == 1) {
+        switch (positions[3]) {
+            case ATTACK: action =  Attacker();
+                break;
+            case LEFTFORWARD: action =  leftForward();
+                break;
+            case RIGHTFORWARD: action =  rightForward();
+                break;
+            case DEFENDER: action =  rightForward();
+                break;
+        }
+           /* if (playersOnBall[3] == 1) {
+                assignAttacker();
                 return MoveAroundBall();
             }
             if (Look(GetBallDirection()) == OPPONENT) {
                 return AlternateMove(GetBallDirection());
             } else {
                 return GetBallDirection();
-            }
-        }
+            }*/
+        
         return action;
     }
 
