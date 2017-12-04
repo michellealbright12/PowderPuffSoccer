@@ -1,3 +1,14 @@
+/*
+- Fix isClearPath function to determine which direction to look in and check to
+  see if that is clear : CLAIRE
+- Check to make sure move around ball works correctly : MICHELLE
+- Assign players to positions : MICHELLE
+- Get other people to move : CLAIRE
+- Finish leftForward and rightForward functions : CLAIRE
+- Defender function : MICHELLE
+*/
+
+
 import java.awt.*;
 
 public class PowderPuff extends Player {
@@ -141,28 +152,49 @@ public class PowderPuff extends Player {
     }
 
     //leftForward function
-    public int leftForward() {
-        int move = PLAYER;
+    public int LeftForward() {
+        int move = WEST;
         //find attack index
         int attack = 0;
         //find leftforward index
         int leftForward = 0;
-
-        if (!isClearPath(playersX[attack], playersY[attack],
-            playersX[leftForward], playersY[leftForward])) {
-
+        for (int i = 0; i <= 3; i++) {
+          if (positions[i] == ATTACK) {
+            attack = i;
+          }
+          if (positions[i] == LEFTFORWARD) {
+            leftForward = i;
+          }
         }
-        move = MoveToClearPath();
+        if (isClearPath(playersX[attack], playersY[attack],
+            playersX[leftForward], playersY[leftForward])) {
+            move = MoveToClearPath();
+        }
         return move;
     }
 
     //rightForward function
     public int rightForward() {
-      int move = PLAYER;
-      move = MoveToClearPath();
+      int move = WEST;
+      //find attack index
+      int attack = 0;
+      //find rightForward index
+      int rightForward = 0;
+      for (int i = 0; i <= 3; i++) {
+        if (positions[i] == ATTACK) {
+          attack = i;
+        }
+        if (positions[i] == RIGHTFORWARD) {
+          rightForward = i;
+        }
+      }
+      if (isClearPath(playersX[attack], playersY[attack],
+          playersX[rightForward], playersY[rightForward])) {
+          move = MoveToClearPath();
+      }
       return move;
     }
-    
+
     //defender function
     public int defender() {
         //try to get between the ball and the endline
@@ -469,7 +501,6 @@ public class PowderPuff extends Player {
     public final int GetTeammateDirection(int n)
     {
         return Parent.GetTeammateDirection(this, n);
-        //return NORTH;
     }
 
 }
