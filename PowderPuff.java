@@ -1,11 +1,13 @@
-/*
-- Fix isClearPath function to determine which direction to look in and check to
-  see if that is clear : CLAIRE
+action = WEST/*
 - Check to make sure move around ball works correctly : MICHELLE
 - Assign players to positions : MICHELLE
 - Get other people to move : CLAIRE
 - Finish leftForward and rightForward functions : CLAIRE
 - Defender function : MICHELLE
+- Have left forward and right forward run towards the goal until they're ahead
+  of attack player
+- If a defender is in front of you, the attacker, try to pass to a forward. If
+  not, just keep going towards the goal
 */
 
 
@@ -37,45 +39,31 @@ public class PowderPuff extends Player {
       int yDifference = abs(y1 - y2);
       int startX, endX;
       int startY, endY;
+      boolean isClear = false;
 
       if (y1 < y2) {
-        // check to the right of y1
-        // and the left of y2
-        startY = y1;
-        endY = y2;
+        if (Look(EAST) == EMPTY) {
+          isClear = true;
+        }
       } else {
-        // check to the right of x2
-        // and the left of x1
-        startY = y2;
-        endY = y1;
+        if (Look(WEST) == EMPTY) {
+          isClear = true;
+        }
       }
       if (x1 < x2) {
         startX = x1;
         endX = x2;
-        // check to the right of x1
-        // and the left of x2
+        if (Look(EAST) == EMPTY) {
+          isClear = true;
+        }
       } else {
         startX = x2;
         endX = x1;
-        // check to the right of x2
-        // and the left of x1
+        if (Look(WEST) == EMPTY) {
+          isClear = true;
+        }
       }
-
-      // check straight line in x direction
-      for (int i = startX; i < endX; i++) {
-          // if box (i, startY) is ! EMPTY, return false
-      }
-
-      // check straight line in y Direction
-      for (int j = startY; j < endY; j++) {
-
-      }
-
-      // check straight line in NE Direction
-
-      // check straight line in NW direction
-
-      return true;
+      return isClear;
     }
     public int MoveToClearPath(int position) {
       int attackX = 0;
@@ -204,7 +192,7 @@ public class PowderPuff extends Player {
             if (Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
                 return KICK;
             }
-            
+
             /* If ball is near my defending goal, really try to kick it */
             if ((x > 3 * FieldX() / 4) &&
                 (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT)) {
@@ -353,7 +341,7 @@ public class PowderPuff extends Player {
     }
 
     public int Player1() {
-        int action = PLAYER;
+        int action = WEST;
 
         playersX[0] = GetLocation().x;
         playersY[0] = GetLocation().y;
@@ -380,12 +368,12 @@ public class PowderPuff extends Player {
             } else {
                 return GetBallDirection();
             }*/
-        
+
         return action;
     }
 
     public int Player2() {
-        int action = PLAYER;
+        int action = WEST;
 
         playersX[1] = GetLocation().x;
         playersY[1] = GetLocation().y;
@@ -411,12 +399,12 @@ public class PowderPuff extends Player {
             } else {
                 return GetBallDirection();
             }*/
-        
+
         return action;
     }
 
     public int Player3() {
-        int action = PLAYER;
+        int action = WEST;
 
         playersX[2] = GetLocation().x;
         playersY[2] = GetLocation().y;
@@ -442,12 +430,12 @@ public class PowderPuff extends Player {
             } else {
                 return GetBallDirection();
             }*/
-        
+
         return action;
     }
 
     public int Player4() {
-        int action = PLAYER;
+        int action = WEST;
 
         playersX[3] = GetLocation().x;
         playersY[3] = GetLocation().y;
@@ -473,7 +461,7 @@ public class PowderPuff extends Player {
             } else {
                 return GetBallDirection();
             }*/
-        
+
         return action;
     }
 
