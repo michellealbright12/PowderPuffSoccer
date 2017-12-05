@@ -150,8 +150,9 @@ public class PowderPuff extends Player {
         if (playersOnBall[index] == 1) {
             return KickToClearPath();
         }
-        //move to ball and kick to nearest forward
+        //move to ball
         move = GetBallDirection();
+
         return move;
     }
 
@@ -491,21 +492,21 @@ public class PowderPuff extends Player {
         }
         switch (direction) {
             case NORTH:
-                move = EAST;
+                move = NORTHEAST;
             case NORTHEAST:
-                move = NORTH;
+                move = EAST;
             case EAST:
-                move = NORTH;
+                move = NORTHEAST;
             case SOUTHEAST:
                 move = EAST;
             case SOUTH:
-                move = EAST;
+                move = SOUTHEAST;
             case SOUTHWEST:
                 move = SOUTH;
             case WEST:
                 move = KICK;
             case NORTHWEST:
-                move = EAST;
+                move = NORTH;
         }
         /* If there is an opponent blocking the move you want to make */
         if (Look(move) != EMPTY || Look(move) == BOUNDARY) {
