@@ -1,9 +1,11 @@
-action = WEST/*
+/*
 - Check to make sure move around ball works correctly : MICHELLE
-- Assign players to positions : MICHELLE
+- checked off - Assign players to positions : MICHELLE
 - Get other people to move : CLAIRE
 - Finish leftForward and rightForward functions : CLAIRE
 - Defender function : MICHELLE
+ 
+ 
 - Have left forward and right forward run towards the goal until they're ahead
   of attack player
 - If a defender is in front of you, the attacker, try to pass to a forward. If
@@ -15,28 +17,28 @@ import java.awt.*;
 
 public class PowderPuff extends Player {
 
-    public PowderPuff() {
-        super();
-        CalledSuper = true;
-        Run = true;
-    }
-
+    
     static int playersX[];
     static int playersY[];
     static int distancesToBall[];
     static boolean someoneOnBall;
     static int playersOnBall[];
     static final int ATTACK = 1;
+    static int attacker = 0;
     static final int LEFTFORWARD = 2;
+    static int leftForward = 1;
     static final int RIGHTFORWARD = 3;
+    static int rightForward = 2;
     static final int DEFENDER = 4;
+    static int defender = 3;
+    static final int playerDistance = 8;
     static int positions[];
 
     /* Check to see if there is a "clear" path by checking the direction around
        each player */
     public boolean isClearPath(int x1, int y1, int x2, int y2) {
-      int xDifference = abs(x1 - x2);
-      int yDifference = abs(y1 - y2);
+      int xDifference = Math.abs(x1 - x2);
+      int yDifference = Math.abs(y1 - y2);
       int startX, endX;
       int startY, endY;
       boolean isClear = false;
@@ -87,31 +89,33 @@ public class PowderPuff extends Player {
       }
       if (isClearPath(attackX, attackY, secondX, secondY)) {
         return KICK;
-      } else if isClearPath(attackX, attackY, secondX + 1, secondY)) {
+      } else if (isClearPath(attackX, attackY, secondX + 1, secondY)) {
         return EAST;
-      } else if isClearPath(attackX, attackY, secondX - 1, secondY)) {
+      } else if (isClearPath(attackX, attackY, secondX - 1, secondY)) {
         return WEST;
-      } else if isClearPath(attackX, attackY, secondX, secondY - 1)) {
+      } else if (isClearPath(attackX, attackY, secondX, secondY - 1)) {
         return NORTH;
-      } else if isClearPath(attackX, attackY, secondX, secondY + 1)) {
+      } else if (isClearPath(attackX, attackY, secondX, secondY + 1)) {
         return SOUTH;
-      } else if isClearPath(attackX, attackY, secondX + 1, secondY + 1)) {
+      } else if (isClearPath(attackX, attackY, secondX + 1, secondY + 1)) {
         return SOUTHEAST;
-      } else if isClearPath(attackX, attackY, secondX - 1, secondY + 1)) {
+      } else if (isClearPath(attackX, attackY, secondX - 1, secondY + 1)) {
         return SOUTHWEST;
-      } else if isClearPath(attackX, attackY, secondX + 1, secondY - 1)) {
+      } else if (isClearPath(attackX, attackY, secondX + 1, secondY - 1)) {
         return NORTHEAST;
-      } else if isClearPath(attackX, attackY, secondX - 1, secondY - 1)) {
+      } else if (isClearPath(attackX, attackY, secondX - 1, secondY - 1)) {
         return NORTHWEST;
       } else {
-        return GetTeammateDirection();
+        return WEST;
       }
     }
 
     public int KickToClearPath() {
         int move = PLAYER;
-        int attackX, attackY;
-        int forwardX, forwardY;
+        int attackX = 0;
+        int attackY = 0;
+        int forwardX = 0;
+        int forwardY = 0;
         for (int i = 0; i <= 3; i++) {
           if (positions[i] == ATTACK) {
             attackX = playersX[i];
@@ -136,63 +140,189 @@ public class PowderPuff extends Player {
             return KickToClearPath();
         }
         //move to ball and kick to nearest forward
-        move = //GetBallDirection();
+        move = GetBallDirection();
         return move;
     }
 
     //leftForward function
-    public int LeftForward() {
-        int move = WEST;
-        //find attack index
-        int attack = 0;
-        //find leftforward index
-        int leftForward = 0;
+    public int leftForward() {
+        
+        int horizontal = -1;
+        int vertical = -1;
+        int x = GetLocation().x;
+        int y = GetLocation().y;
+        
+        for (int i = 0; i <= 3; i++) {
+            if (positions[i] == ATTACK) {
+                attacker = i;
+            }
+            if (positions[i] == LEFTFORWARD) {
+                leftForward = i;
+            }
+        }
+        if (isClearPath(playersX[attacker], playersY[attacker],
+                        playersX[leftForward], playersY[leftForward])) {
+            return MoveToClearPath(LEFTFORWARD);
+        }
+
+        
+        /* If near the ball, act like a leader */
+        if (GetBallDistance() < 2) {
+            return(Attack());
+        }
+        
+        /* Try to get into position */
+        
+        //no on is north and attacker insn't in your way
+        if (Look(NORTH) == EMPTY && (y > playersY[attacker] - playerDistance)) {
+            vertical = NORTH;
+        }
+        if (Look(SOUTH) == EMPTY && (y < playersY[attacker] - playerDistance)) {
+            vertical = SOUTH;
+        }
+        
+        //if behind attacker but in same y line, move down
+        if ((x < playersX[attacker]) && (y == playersY[attacker])) {
+            vertical = SOUTH;
+        }
+        if (Look(WEST) == EMPTY && (x > playersX[attacker] + playerDistance)) {
+            horizontal = WEST;
+        }
+        if (Look(EAST) == EMPTY && (x < playersX[attacker] + playerDistance)) {
+            horizontal = EAST;
+        }
+        
+        if ((horizontal == EAST) && (vertical == NORTH)) {
+            return(NORTHEAST);
+        }
+        if ((horizontal == EAST) && (vertical == SOUTH)) {
+            return(SOUTHEAST);
+        }
+        if ((horizontal == WEST) && (vertical == NORTH)) {
+            return(NORTHWEST);
+        }
+        if ((horizontal == WEST) && (vertical== SOUTH)) {
+            return(SOUTHWEST);
+        }
+        if (horizontal == EAST) {
+            return(EAST);
+        }
+        if (horizontal == WEST) {
+            return(WEST);
+        }
+        if (vertical == NORTH) {
+            return(NORTH);
+        }
+        if (vertical == SOUTH) {
+            return(SOUTH);
+        }
+        return(GetBallDirection());
         
         //if you have ball & defense in front of you, pass to right forward
-        //else keep moving toward ball down the field
-        for (int i = 0; i <= 3; i++) {
-          if (positions[i] == ATTACK) {
-            attack = i;
-          }
-          if (positions[i] == LEFTFORWARD) {
-            leftForward = i;
-          }
-        }
-        if (isClearPath(playersX[attack], playersY[attack],
-            playersX[leftForward], playersY[leftForward])) {
-            move = MoveToClearPath();
-        }
-        return move;
+
+
     }
 
     //rightForward function
     public int rightForward() {
       int move = WEST;
       //find attack index
-      int attack = 0;
+      int attacker = 0;
       //find rightForward index
       int rightForward = 0;
         //get into position
         
         //if you have ball & defense in front of you, pass to right forward
         //else keep moving toward ball down the field
-      for (int i = 0; i <= 3; i++) {
-        if (positions[i] == ATTACK) {
-          attack = i;
+
+        int horizontal = -1;
+        int vertical = -1;
+        int x = GetLocation().x;
+        int y = GetLocation().y;
+        
+        for (int i = 0; i <= 3; i++) {
+            if (positions[i] == ATTACK) {
+                attacker = i;
+            }
+            if (positions[i] == LEFTFORWARD) {
+                leftForward = i;
+            }
         }
-        if (positions[i] == RIGHTFORWARD) {
-          rightForward = i;
+        if (isClearPath(playersX[attacker], playersY[attacker],
+                        playersX[leftForward], playersY[leftForward])) {
+            return MoveToClearPath(RIGHTFORWARD);
         }
-      }
-      if (isClearPath(playersX[attack], playersY[attack],
-          playersX[rightForward], playersY[rightForward])) {
-          move = MoveToClearPath();
-      }
-      return move;
+        
+        
+        /* If near the ball, act like a leader */
+        if (GetBallDistance() < 2) {
+            return(Attack());
+        }
+        
+        /* Try to get into position */
+        
+        //no on is north and attacker insn't in your way
+        if (Look(NORTH) == EMPTY && (y > playersY[attacker] + playerDistance)) {
+            vertical = NORTH;
+        }
+        if (Look(SOUTH) == EMPTY && (y < playersY[attacker] + playerDistance)) {
+            vertical = SOUTH;
+        }
+        
+        //if behind attacker but in same y line, move down
+        if ((x < playersX[attacker]) && (y == playersY[attacker])) {
+            vertical = SOUTH;
+        }
+        if (Look(WEST) == EMPTY && (x > playersX[attacker] + playerDistance)) {
+            horizontal = WEST;
+        }
+        if (Look(EAST) == EMPTY && (x < playersX[attacker] + playerDistance)) {
+            horizontal = EAST;
+        }
+        
+        if ((horizontal == EAST) && (vertical == NORTH)) {
+            return(NORTHEAST);
+        }
+        if ((horizontal == EAST) && (vertical == SOUTH)) {
+            return(SOUTHEAST);
+        }
+        if ((horizontal == WEST) && (vertical == NORTH)) {
+            return(NORTHWEST);
+        }
+        if ((horizontal == WEST) && (vertical== SOUTH)) {
+            return(SOUTHWEST);
+        }
+        if (horizontal == EAST) {
+            return(EAST);
+        }
+        if (horizontal == WEST) {
+            return(WEST);
+        }
+        if (vertical == NORTH) {
+            return(NORTH);
+        }
+        if (vertical == SOUTH) {
+            return(SOUTH);
+        }
+        return(GetBallDirection());
     }
 
     //defender function
     public int defender() {
+        int horizontal = -1;
+        int vertical = -1;
+        int x = GetLocation().x;
+        int y = GetLocation().y;
+        
+        
+        if (Look(SOUTHWEST) == BALL) {
+        }
+        
+        if (Look(NORTH) == BALL) {
+        }
+        
+        if (Look(WEST) == BALL) {
+        }
         //try to get between the ball and the endline
         if (Look(NORTH) == BALL) {
             /* If an opponent can kick toward my goal, try to kick the ball
@@ -206,6 +336,31 @@ public class PowderPuff extends Player {
                 (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT)) {
                 return KICK;
             }
+        }
+        if (Look(EAST) == BALL) {
+            
+        }
+        
+        if (Look(SOUTHEAST) == BALL) {
+            //get between ball and goal
+            
+            /** east or west? **/
+            return(EAST);
+        }
+        
+        if (Look(SOUTH) == BALL) {
+            /* If an opponent can kick toward my goal, try to kick the ball
+             away */
+            if (Look(WEST) == OPPONENT && (Look(SOUTHWEST) == OPPONENT)) {
+                return(KICK);
+            }
+            /* If ball is near my defending goal, really try to kick it */
+            if ((x > 3 * FieldX() / 4) &&
+                (Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT)) {
+                return(KICK);
+            }
+        }
+        return(GetBallDirection());
     }
 
 
@@ -215,7 +370,7 @@ public class PowderPuff extends Player {
             if (distancesToBall[i] < distancesToBall[attacker]) {
                 attacker = i;
             }
-            if (playersOn[i] == 1) {
+            if (playersOnBall[i] == 1) {
                 assignOthers(i);
                 break;
             }
@@ -225,13 +380,14 @@ public class PowderPuff extends Player {
 
     //assignOthers function
     public void assignOthers(int attacker) {
-        int lowX = INTEGER.MAX_VALUE;
-        int highX = INTEGER.MIN_VALUE;
-        int lowY = INTEGER.MAX_VALUE;
-        int highY = INTEGER.MIN_VALUE;
-
+        int lowX = Integer.MAX_VALUE;
+        int highX = Integer.MIN_VALUE;
+        int lowY = Integer.MAX_VALUE;
+        int highY = Integer.MIN_VALUE;
+        int newLeftForward = 0;
+        int newRightForward = 0;
         for (int i = 0; i < 4; i++) {
-            positions[i] == 0;
+            positions[i] = 0;
         }
 
         positions[attacker] = ATTACK;
@@ -240,7 +396,7 @@ public class PowderPuff extends Player {
         for (int i = 0; i < 4; i++) {
             if (positions[i] == 0) {
                 if (playersY[i] < lowY) {
-                    lowY = players[i];
+                    lowY = playersY[i];
                     newLeftForward = i;
                 }
             }
@@ -251,7 +407,7 @@ public class PowderPuff extends Player {
         for (int i = 0; i < 4; i++) {
             if (positions[i] == 0) {
                 if (playersY[i] > highY) {
-                    highY = players[i];
+                    highY = playersY[i];
                     newRightForward = i;
                 }
             }
@@ -358,7 +514,7 @@ public class PowderPuff extends Player {
         int closestPlayer = GetPlayerClosestToBall();
         assignAttacker();
         switch (positions[0]) {
-            case ATTACK: action =  Attacker();
+            case ATTACK: action =  Attack();
                 break;
             case LEFTFORWARD: action =  leftForward();
                 break;
@@ -389,7 +545,7 @@ public class PowderPuff extends Player {
         distancesToBall[1] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         switch (positions[1]) {
-            case ATTACK: action =  Attacker();
+            case ATTACK: action =  Attack();
                 break;
             case LEFTFORWARD: action =  leftForward();
                 break;
@@ -420,7 +576,7 @@ public class PowderPuff extends Player {
         distancesToBall[2] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         switch (positions[2]) {
-            case ATTACK: action =  Attacker();
+            case ATTACK: action =  Attack();
                 break;
             case LEFTFORWARD: action =  leftForward();
                 break;
@@ -451,7 +607,7 @@ public class PowderPuff extends Player {
         distancesToBall[3] = GetBallDistance();
         int closestPlayer = GetPlayerClosestToBall();
         switch (positions[3]) {
-            case ATTACK: action =  Attacker();
+            case ATTACK: action =  Attack();
                 break;
             case LEFTFORWARD: action =  leftForward();
                 break;
@@ -493,10 +649,5 @@ public class PowderPuff extends Player {
         return BALL;
     }
 
-    /** Think about it. */
-    public final int GetTeammateDirection(int n)
-    {
-        return Parent.GetTeammateDirection(this, n);
-    }
 
 }
