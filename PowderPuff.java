@@ -252,6 +252,7 @@ public class PowderPuff extends Player {
                 return EAST;
                 
             }
+            return MoveAroundBall();
         }
         return GetBallDirection();
     }
@@ -649,6 +650,7 @@ public class PowderPuff extends Player {
     public int MoveAroundBall() {
         int move = PLAYER;
         int alternateMove = PLAYER;
+        int secondAlternate = PLAYER;
         int direction = PLAYER;
         for (int i = 0; i <= 7; i++) {
             if (Look(i) == BALL) {
@@ -665,6 +667,7 @@ public class PowderPuff extends Player {
             case EAST:
                 move = NORTHEAST;
                 alternateMove = SOUTHEAST;
+                secondAlternate = NORTH;
             case SOUTHEAST:
                 move = EAST;
                 alternateMove = SOUTH;
@@ -682,8 +685,11 @@ public class PowderPuff extends Player {
                 alternateMove = WEST;
         }
         /* If there is an opponent blocking the move you want to make */
-        if (Look(move) != EMPTY || Look(move) == BOUNDARY) {
+        if (Look(move) != EMPTY) {
             move = alternateMove;
+            if (Look(alternateMove) != EMPTY) {
+                move = secondAlternate;
+            }
         }
         return move;
     }
