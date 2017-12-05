@@ -255,12 +255,12 @@ public class PowderPuff extends Player {
             if (positions[i] == ATTACK) {
                 attacker = i;
             }
-            if (positions[i] == LEFTFORWARD) {
-                leftForward = i;
+            if (positions[i] == RIGHTFORWARD) {
+                rightForward = i;
             }
         }
         if (isClearPath(playersX[attacker], playersY[attacker],
-                        playersX[leftForward], playersY[leftForward])) {
+                        playersX[rightForward], playersY[rightForward])) {
             return MoveToClearPath(RIGHTFORWARD);
         }
         
@@ -342,11 +342,6 @@ public class PowderPuff extends Player {
                 return KICK;
             }
 
-            /* If ball is near my defending goal, really try to kick it */
-            if ((x > 3 * FieldX() / 4) &&
-                (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT)) {
-                return KICK;
-            }
         }
         if (Look(EAST) == BALL) {
             
@@ -363,11 +358,6 @@ public class PowderPuff extends Player {
             /* If an opponent can kick toward my goal, try to kick the ball
              away */
             if (Look(WEST) == OPPONENT && (Look(SOUTHWEST) == OPPONENT)) {
-                return(KICK);
-            }
-            /* If ball is near my defending goal, really try to kick it */
-            if ((x > 3 * FieldX() / 4) &&
-                (Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT)) {
                 return(KICK);
             }
         }
@@ -440,6 +430,11 @@ public class PowderPuff extends Player {
         distancesToBall = new int[4];
         someoneOnBall = false;
         playersOnBall = new int[4];
+        positions = new int[4];
+        positions[0] = ATTACK;
+        positions[1] = RIGHTFORWARD;
+        positions[2] = LEFTFORWARD;
+        positions[3] = DEFENDER;
     }
 
     public void InitializePoint() {
@@ -448,6 +443,10 @@ public class PowderPuff extends Player {
             playersY[i] = 0;
             playersOnBall[i] = 0;
         }
+        positions[0] = ATTACK;
+        positions[1] = RIGHTFORWARD;
+        positions[2] = LEFTFORWARD;
+        positions[3] = DEFENDER;
     }
 
     public int AlternateMove(int move) {
