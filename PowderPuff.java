@@ -134,9 +134,20 @@ public class PowderPuff extends Player {
     }
 
     //attack function
+    
+    //Goals: move the ball west
+    // defend if necessary
+    // kick away from majority of players
+    
     public int Attack() {
-        int move = PLAYER;
-        if (KickToClearPath() != PLAYER) {
+        int move = GetBallDirection();
+        int index = 0;
+        for (int i = 0; i <= 3; i++) {
+            if (positions[i] == ATTACK) {
+                index = i;
+            }
+        }
+        if (playersOnBall[index] == 1) {
             return KickToClearPath();
         }
         //move to ball and kick to nearest forward
@@ -647,5 +658,4 @@ public class PowderPuff extends Player {
         }
         return BALL;
     }
-
 }
