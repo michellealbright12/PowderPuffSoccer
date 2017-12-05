@@ -11,9 +11,9 @@ public class JavaSoccer
 	Thread thisThread = Thread.currentThread();
 	World Universe = new World();
   //East
-  Universe.LoadTeam("Randy", 6);
+  Universe.LoadTeam("rollers", 6);
   //West
-  Universe.LoadTeam("PowderPuff", 2);
+  Universe.LoadTeam("PowderPuffClaire", 2);
   Universe.GoAhead();
 	while (!Universe.GameOn() && !Universe.Stepping()) {Thread.yield();}
 	Universe.Go();
