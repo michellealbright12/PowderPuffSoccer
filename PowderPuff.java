@@ -648,5 +648,10 @@ public class PowderPuff extends Player {
         return BALL;
     }
 
+    /** Think about it. */
+    public int GetTeammateDirection(int n) {
+        return Parent.GetTeammateDirection(this, n);
+    }
+
 
 }
