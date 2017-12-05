@@ -152,6 +152,11 @@ public class PowderPuff extends Player {
         }
         //move to ball and kick to nearest forward
         move = GetBallDirection();
+        for (int i = 0; i <= 7; i++) {
+            if(Look(i) == BALL) {
+               move = MoveAroundBall();
+            }
+        }
         return move;
     }
 
