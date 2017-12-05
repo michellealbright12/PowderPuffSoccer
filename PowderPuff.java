@@ -155,6 +155,9 @@ public class PowderPuff extends Player {
                 index = i;
             }
         }
+        if (GetBallDistance() <= 1) {
+            playersOnBall[index] = 1;
+        }
         
         if (playersOnBall[index] == 1) {
             //            if (Look(WEST) != EMPTY) {
@@ -274,7 +277,7 @@ public class PowderPuff extends Player {
         }
         
         /* If near the ball, act like a leader */
-        if (GetBallDistance() < 2) {
+        if (GetBallDistance() < 5) {
             assignAttacker();
             return(Attack());
         }
@@ -362,7 +365,7 @@ public class PowderPuff extends Player {
             }
         }
         /* If near the ball, act like a leader */
-        if (GetBallDistance() < 2) {
+        if (GetBallDistance() < 5) {
             assignAttacker();
             return(Attack());
         }
@@ -657,19 +660,22 @@ public class PowderPuff extends Player {
         }
         switch (direction) {
             case NORTH:
-                move = NORTHEAST;
+                //NORTHEAST
+                move = EAST;
                 alternateMove = EAST;
             case NORTHEAST:
                 move = EAST;
                 alternateMove = NORTH;
             case EAST:
-                move = NORTHEAST;
+                //NORTHEAST
+                move = NORTH;
                 alternateMove = SOUTHEAST;
             case SOUTHEAST:
                 move = EAST;
                 alternateMove = SOUTH;
             case SOUTH:
-                move = SOUTHEAST;
+                //SOUTHEAST
+                move = EAST;
                 alternateMove = EAST;
             case SOUTHWEST:
                 move = SOUTH;
@@ -689,12 +695,15 @@ public class PowderPuff extends Player {
     }
     
     public int Player1() {
-        int action = WEST;
+        int action = PLAYER;
         
         playersX[0] = GetLocation().x;
         playersY[0] = GetLocation().y;
         
         distancesToBall[0] = GetBallDistance();
+        if (GetBallDistance() <= 1) {
+            playersOnBall[0] = 1;
+        }
         int closestPlayer = GetPlayerClosestToBall();
         assignAttacker();
         switch (positions[0]) {
@@ -721,12 +730,15 @@ public class PowderPuff extends Player {
     }
     
     public int Player2() {
-        int action = WEST;
+        int action = PLAYER;
         
         playersX[1] = GetLocation().x;
         playersY[1] = GetLocation().y;
         
         distancesToBall[1] = GetBallDistance();
+        if (GetBallDistance() <= 1) {
+            playersOnBall[1] = 1;
+        }
         int closestPlayer = GetPlayerClosestToBall();
         // assignAttacker();
         switch (positions[1]) {
@@ -753,12 +765,15 @@ public class PowderPuff extends Player {
     }
     
     public int Player3() {
-        int action = WEST;
+        int action = PLAYER;
         
         playersX[2] = GetLocation().x;
         playersY[2] = GetLocation().y;
         
         distancesToBall[2] = GetBallDistance();
+        if (GetBallDistance() <= 1) {
+            playersOnBall[2] = 1;
+        }
         int closestPlayer = GetPlayerClosestToBall();
         //  assignAttacker();
         switch (positions[2]) {
@@ -785,12 +800,15 @@ public class PowderPuff extends Player {
     }
     
     public int Player4() {
-        int action = WEST;
+        int action = PLAYER;
         
         playersX[3] = GetLocation().x;
         playersY[3] = GetLocation().y;
         
         distancesToBall[3] = GetBallDistance();
+        if (GetBallDistance() <= 1) {
+            playersOnBall[3] = 1;
+        }
         int closestPlayer = GetPlayerClosestToBall();
         switch (positions[3]) {
             case ATTACK: action =  Attack();
