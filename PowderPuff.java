@@ -266,10 +266,10 @@ public class PowderPuff extends Player {
             return(Attack());
         }
         //get out of way of attacker
-        if (isClearPath(playersX[attacker], playersY[attacker],
+       /* if (isClearPath(playersX[attacker], playersY[attacker],
                         playersX[leftForward], playersY[leftForward])) {
             return MoveToClearPath(LEFTFORWARD);
-        }
+        }*/
 
         //if in back part of field act like a defender
         if ((x > 3 * FieldX() / 4)) {
@@ -353,10 +353,10 @@ public class PowderPuff extends Player {
             assignAttacker();
             return(Attack());
         }
-        if (isClearPath(playersX[attacker], playersY[attacker],
+        /*if (isClearPath(playersX[attacker], playersY[attacker],
                         playersX[rightForward], playersY[rightForward])) {
             return MoveToClearPath(RIGHTFORWARD);
-        }
+        }*/
         
         //if in back half of field, act like on defense
         if ((x > 3 * FieldX() / 4)) {
@@ -365,16 +365,16 @@ public class PowderPuff extends Player {
         /* Try to get into position */
         
         //no on is north and attacker insn't in your way
-        if (Look(NORTH) == EMPTY && (y > playersY[attacker] + playerDistance)) {
+        if (Look(NORTH) == EMPTY && (y > playersY[attacker] + playerDistance) ) {
             vertical = NORTH;
         }
-        if (Look(SOUTH) == EMPTY && (y < playersY[attacker] + playerDistance)) {
+        if (Look(SOUTH) == EMPTY && (y < playersY[attacker] + playerDistance) ) {
             vertical = SOUTH;
         }
         
         //if behind attacker but in same y line, move down
         if ((x < playersX[attacker]) && (y == playersY[attacker])) {
-            vertical = SOUTH;
+            vertical = NORTH;
         }
         if (Look(WEST) == EMPTY && (x > playersX[attacker] + playerDistance)) {
             horizontal = WEST;
@@ -516,7 +516,7 @@ public class PowderPuff extends Player {
         }
 
         //if no ball or opponents around, act like attacker
-        return(GetBallDirection);
+        return(GetBallDirection());
     }
 
 
