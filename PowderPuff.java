@@ -17,7 +17,6 @@ import java.awt.*;
 
 public class PowderPuff extends Player {
     
-    
     static int playersX[];
     static int playersY[];
     static int distancesToBall[];
@@ -33,8 +32,119 @@ public class PowderPuff extends Player {
     static int defender = 3;
     static final int playerDistance = 8;
     static int positions[];
+    static int angles[];
 
-    public final int GetOpponentDistance(Player Client, int nth) {
+    private int getBallX(int x, int distance, int angle) {
+        return (int)Math.round((x + (distance * Math.cos(angle))));
+    }
+
+    private int getBallY(int y, int distance, int angle) {
+        return (int)Math.round((y + (distance * Math.sin(angle))));
+    }
+
+     private int DefendRow(int x, int y) {
+        for (int i = 4; i > 0; i--)
+            if ((GetOpponentDirection(i) == 0) || 
+                (GetOpponentDirection(i) == 1) || 
+                (GetOpponentDirection(i) == 3) || 
+                (GetOpponentDirection(i) == 2) || 
+                (GetOpponentDirection(i) == 4)) {
+                return MoveToSquare(GetLocation().x + 1, y);
+            }   
+        return MoveToSquare(x, y);
+    }
+
+    private int MoveToSquare(int gx, int gy) {
+    int x = GetLocation().x;
+    int y = GetLocation().y;
+    int ew = 0;
+    int ns = 0;
+    
+
+    if (y > gy) {
+      ns = 0;
+    } else if (y < gy) {
+      ns = 4;
+    }
+    if (x > gx) {
+      ew = 6;
+    } else if (x < gx) {
+      ew = 2;
+    }
+    int desired = 0;
+    if (ew == 2) {
+      if (ns == 0) {
+        desired = 1; 
+        } else { 
+        if (ns == 4) {
+          desired = 3;
+        } else
+          desired = 2;
+        } 
+    } else if (ew == 6) {
+        if (ns == 0) {
+          desired = 7; 
+        } else if (ns == 4) {
+            desired = 5;
+          } else
+            desired = 6;
+         
+    } else if (ns == 0) {
+          desired = 0; 
+    } else if (ns == 4) {
+            desired = 4;
+    } else {
+            return 8; 
+    } 
+    return PickMove(desired);
+  }
+
+  private int PickMove(int dir) {
+    if (Look(dir) == 16)
+      return dir;
+    return SelectSmartMove(dir);
+  }
+  
+  private int SelectSmartMove(int dir) {
+    int temp = 0;
+    
+    switch (dir) {
+    case 0: 
+      if (Look(7) == 16) return 7;
+      if (Look(1) == 16) return 0;
+      return 8;
+    case 1: 
+      if (Look(2) == 16) return 2;
+      if (Look(0) == 16) return 0;
+      return 8;
+    case 7: 
+      if (Look(0) == 16) return 0;
+      if (Look(6) == 16) return 6;
+      return 8;
+    case 6: 
+      if (Look(7) == 16) return 7;
+      if (Look(5) == 16) return 5;
+      return 8;
+    case 2: 
+      if (Look(1) == 16) return 1;
+      if (Look(3) == 16) return 3;
+      return 8;
+    case 5: 
+      if (Look(4) == 16) return 4;
+      if (Look(6) == 16) return 6;
+      return 8;
+    case 4: 
+      if (Look(3) == 16) return 3;
+      if (Look(5) == 16) return 5;
+      return 8;
+    case 3: 
+      if (Look(2) == 16) return 2;
+      if (Look(4) == 16) return 4;
+      return 8;
+    }
+    return 8;
+  }
+    /*private final int GetOpponentDistance(Player Client, int nth) {
         if(nth>0 && nth<5)
         {
             Team ClientTeam = Parent.GetTeam(Client);
@@ -46,7 +156,7 @@ public class PowderPuff extends Player {
         return -1;
     }
 
-    public final int GetOpponentDirection(Player Client, int nth) {
+    private final int GetOpponentDirection(Player Client, int nth) {
         if(nth>0 && nth<5)
         {
             Team ClientTeam = GetTeam(Client);
@@ -56,7 +166,7 @@ public class PowderPuff extends Player {
             return GetDirection(PlayerLocation, OtherPlayerLocation, ClientTeam.GetSide());
         }
         return -1;
-    }
+    }*/
     
     /* Check to see if there is a "clear" path by checking the direction around
      each player */
@@ -140,13 +250,6 @@ public class PowderPuff extends Player {
         int attackY = 0;
         int forwardX = 0;
         int forwardY = 0;
-        //        int kickTo = 0;
-        //
-        //        for (int i = 7; i >= 0; i++) {
-        //            if (i != EAST && Look(i) == EMPTY) {
-        //                kickTo = i;
-        //            }
-        //        }
         for (int i = 0; i <= 3; i++) {
             if (positions[i] == ATTACK) {
                 attackX = playersX[i];
@@ -184,19 +287,6 @@ public class PowderPuff extends Player {
         }
         
         if (playersOnBall[index] == 1) {
-            //            if (Look(WEST) != EMPTY) {
-            //                return KickToClearPath();
-            //            } else {
-            //                return MoveAroundBall();
-            //            }
-            
-            //move to ball
-            /*move = GetBallDirection();
-             for (int i = 0; i <= 7; i++) {
-             if(Look(i) == BALL) {
-             move = MoveAroundBall();
-             }
-             }*/
             if (Look(NORTH) == BALL) {
                 //check for opponents
                 if (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT) {
@@ -452,8 +542,15 @@ public class PowderPuff extends Player {
     
     //defender function
     public int defender() {
+
         int x = GetLocation().x;
         int y = GetLocation().y;
+        if (GetBallDirection() == NORTHEAST || GetBallDirection() == EAST || GetBallDirection() == SOUTHEAST) {
+            int goToX = getBallX(x, GetBallDistance(), angles[GetBallDirection()]);
+            int goToY = getBallY(y, GetBallDistance(), angles[GetBallDirection()]);
+            return DefendRow(goToX, goToY);
+        }
+        
         
         //priority 1 = get ball out of the goal zone
         //priority 2 = get between defender and goal
@@ -627,6 +724,7 @@ public class PowderPuff extends Player {
         someoneOnBall = false;
         playersOnBall = new int[4];
         positions = new int[4];
+        angles = new int[]{90,45,0,315,270,225,180,135};
     }
     
     public void InitializePoint() {
@@ -740,15 +838,6 @@ public class PowderPuff extends Player {
             case DEFENDER: action =  defender();
                 break;
         }
-        /*if (playersOnBall[0] == 1) {
-         assignAttacker();
-         return MoveAroundBall();
-         }
-         if (Look(GetBallDirection()) == OPPONENT) {
-         return AlternateMove(GetBallDirection());
-         } else {
-         return GetBallDirection();
-         }*/
         
         return action;
     }
@@ -775,15 +864,6 @@ public class PowderPuff extends Player {
             case DEFENDER: action =  defender();
                 break;
         }
-        /*if (playersOnBall[1] == 1) {
-         assignAttacker();
-         return MoveAroundBall();
-         }
-         if (Look(GetBallDirection()) == OPPONENT) {
-         return AlternateMove(GetBallDirection());
-         } else {
-         return GetBallDirection();
-         }*/
         
         return action;
     }
@@ -810,15 +890,6 @@ public class PowderPuff extends Player {
             case DEFENDER: action =  defender();
                 break;
         }
-        /*if (playersOnBall[2] == 1) {
-         assignAttacker();
-         return MoveAroundBall();
-         }
-         if (Look(GetBallDirection()) == OPPONENT) {
-         return AlternateMove(GetBallDirection());
-         } else {
-         return GetBallDirection();
-         }*/
         
         return action;
     }
@@ -844,15 +915,6 @@ public class PowderPuff extends Player {
             case DEFENDER: action =  defender();
                 break;
         }
-        /* if (playersOnBall[3] == 1) {
-         assignAttacker();
-         return MoveAroundBall();
-         }
-         if (Look(GetBallDirection()) == OPPONENT) {
-         return AlternateMove(GetBallDirection());
-         } else {
-         return GetBallDirection();
-         }*/
         
         return action;
     }

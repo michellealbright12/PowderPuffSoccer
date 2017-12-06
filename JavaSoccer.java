@@ -13,7 +13,7 @@ public class JavaSoccer
   //East
   Universe.LoadTeam("rollers", 6);
   //West
-  Universe.LoadTeam("PowderPuffClaire", 2);
+  Universe.LoadTeam("PowderPuff", 2);
   Universe.GoAhead();
 	while (!Universe.GameOn() && !Universe.Stepping()) {Thread.yield();}
 	Universe.Go();
