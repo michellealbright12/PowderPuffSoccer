@@ -40,12 +40,12 @@ public class PowderPuff extends Player {
                 (GetOpponentDirection(i) == SOUTHEAST) || 
                 (GetOpponentDirection(i) == EAST) || 
                 (GetOpponentDirection(i) == SOUTH)) {
-                return MoveToSquare(GetLocation().x + 1, y);
+                return MoveToPos(GetLocation().x + 1, y);
             }   
-        return MoveToSquare(x, y);
+        return MoveToPos(x, y);
     }
 
-    private int MoveToSquare(int gx, int gy) {
+    private int MoveToPos(int gx, int gy) {
     int x = GetLocation().x;
     int y = GetLocation().y;
     int ew = 0;
@@ -61,46 +61,44 @@ public class PowderPuff extends Player {
     } else if (x < gx) {
       ew = EAST;
     }
-    int desired = NORTH;
+    int move = NORTH;
     if (ew == EAST) {
         if (ns == NORTH) {
-            desired = NORTHEAST; 
+            move = NORTHEAST; 
         } else if (ns == SOUTH) {
-            desired = SOUTHEAST;
+            move = SOUTHEAST;
         } else {
-          desired = EAST;
+          move = EAST;
         } 
     } else if (ew == WEST) {
         if (ns == NORTH) {
-          desired = NORTHWEST; 
+          move = NORTHWEST; 
         } else if (ns == SOUTH) {
-            desired = SOUTHWEST;
+            move = SOUTHWEST;
         } else {
-            desired = WEST;
+            move = WEST;
         }   
     } else if (ns == NORTH) {
-          desired = NORTH; 
+          move = NORTH; 
     } else if (ns == SOUTH) {
-            desired = SOUTH;
+            move = SOUTH;
     } else {
             return PLAYER; 
     } 
-    return PickMove(desired);
+    return PickMove(move);
   }
 
   private int PickMove(int dir) {
     if (Look(dir) == EMPTY)
       return dir;
-    return SelectSmartMove(dir);
+    return MakeAlternateMove(dir);
   }
   
-  private int SelectSmartMove(int dir) {
-    int temp = 0;
-    
+  private int MakeAlternateMove(int dir) {
     switch (dir) {
     case 0: 
       if (Look(NORTHWEST) == EMPTY) return NORTHWEST;
-      if (Look(NORTHEAST) == EMPTY) return NORTH;
+      if (Look(NORTHEAST) == EMPTY) return NORTHEAST;
       return PLAYER;
     case 1: 
       if (Look(EAST) == EMPTY) return EAST;
@@ -112,23 +110,23 @@ public class PowderPuff extends Player {
       return PLAYER;
     case 6: 
       if (Look(NORTHWEST) == EMPTY) return NORTHWEST;
-      if (Look(SOUTHWEST) == 16) return SOUTHWEST;
+      if (Look(SOUTHWEST) == EMPTY) return SOUTHWEST;
       return PLAYER;
     case 2: 
-      if (Look(NORTHEAST) == 16) return NORTHEAST;
-      if (Look(SOUTHEAST) == 16) return SOUTHEAST;
+      if (Look(NORTHEAST) == EMPTY) return NORTHEAST;
+      if (Look(SOUTHEAST) == EMPTY) return SOUTHEAST;
       return PLAYER;
     case 5: 
-      if (Look(SOUTH) == 16) return SOUTH;
-      if (Look(WEST) == 16) return WEST;
+      if (Look(SOUTH) == EMPTY) return SOUTH;
+      if (Look(WEST) == EMPTY) return WEST;
       return PLAYER;
     case 4: 
-      if (Look(SOUTHEAST) == 16) return SOUTHEAST;
-      if (Look(SOUTHWEST) == 16) return SOUTHWEST;
+      if (Look(SOUTHEAST) == EMPTY) return SOUTHEAST;
+      if (Look(SOUTHWEST) == EMPTY) return SOUTHWEST;
       return PLAYER;
     case 3: 
-      if (Look(EAST) == 16) return EAST;
-      if (Look(SOUTH) == 16) return SOUTH;
+      if (Look(EAST) == EMPTY) return EAST;
+      if (Look(SOUTH) == EMPTY) return SOUTH;
       return PLAYER;
     }
     return PLAYER;
@@ -349,7 +347,7 @@ public class PowderPuff extends Player {
                 return EAST;             
             }
         }
-        return SelectSmartMove(GetBallDirection());
+        return MakeAlternateMove(GetBallDirection());
     }
     
     //leftForward function
@@ -429,7 +427,7 @@ public class PowderPuff extends Player {
         if (vertical == SOUTH) {
             return(SOUTH);
         }
-        return SelectSmartMove(GetBallDirection());
+        return MakeAlternateMove(GetBallDirection());
     }
     
     //rightForward function
@@ -512,7 +510,7 @@ public class PowderPuff extends Player {
         if (vertical == SOUTH) {
             return(SOUTH);
         }
-        return SelectSmartMove(GetBallDirection());
+        return MakeAlternateMove(GetBallDirection());
     }
     
     //defender function
@@ -626,7 +624,7 @@ public class PowderPuff extends Player {
         }
         
         //if no ball or opponents around, act like attacker
-        return SelectSmartMove(GetBallDirection());
+        return MakeAlternateMove(GetBallDirection());
     }
     
     
@@ -784,7 +782,7 @@ public class PowderPuff extends Player {
         }
         /* If there is an opponent blocking the move you want to make */
         if (Look(move) != EMPTY || Look(move) == BOUNDARY) {
-            move = SelectSmartMove(move); //alternateMove;
+            move = MakeAlternateMove(move); //alternateMove;
         }
         return move;
     }
